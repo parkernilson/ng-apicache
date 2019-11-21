@@ -1,0 +1,15 @@
+{
+  "name": "ng-apicache",
+  "version": "1.0.0",
+  "description": "Cache responses from angular http requests to API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "parkernilson",
+  "license": "ISC",
+  "dependencies": {
+    "@angular/common": "^8.2.14",
+    "rxjs": "^6.5.3"
+  }
+}
