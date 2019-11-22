@@ -1,13 +1,24 @@
 {
-  "name": "ng-apicache",
+  "name": "@parkernilson/ng-apicache",
   "version": "1.0.0",
-  "description": "Cache responses from angular http requests to API",
+  "description": "A cache for storing response objects from API requests",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parkernilson/ng-apicache.git"
+  },
   "author": "parkernilson",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parkernilson/ng-apicache/issues"
+  },
+  "homepage": "https://github.com/parkernilson/ng-apicache#readme",
+  "devDependencies": {
+    "typescript": "^3.7.2"
+  },
   "dependencies": {
     "@angular/common": "^8.2.14",
     "rxjs": "^6.5.3"
