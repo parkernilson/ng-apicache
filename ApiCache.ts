@@ -12,6 +12,7 @@ export class ApiCache<DataType> {
     payloadSubject: ReplaySubject<DataType>; 
     /** The current value of this cache's payload */
     value: DataType | undefined;
+    /** The endpoint that this cache will request its payload from. */
     apiEndpoint: string;
 
     /** ok is false if there are no unresolved errors. */
@@ -76,12 +77,12 @@ export class ApiCache<DataType> {
      * way.
      */
     private _setupCurrentValueSubscriber(): void {
-        let mrvSubscription = this.payloadSubject.subscribe((value: DataType) => {
+        let cvSubscription = this.payloadSubject.subscribe((value: DataType) => {
             this.value = value;
         },
         error => {
             this.value = undefined; //in error state, value is undefined
-            mrvSubscription.unsubscribe(); //unsubscribe because observable has errored out
+            cvSubscription.unsubscribe(); //unsubscribe because observable has errored out
         })
     }
 }
