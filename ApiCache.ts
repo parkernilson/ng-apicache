@@ -10,6 +10,8 @@ import { catchError } from 'rxjs/operators';
 export class ApiCache<DataType> {
     /** The subject through which the payload is communicated to the requester */
     payloadSubject: ReplaySubject<DataType>; 
+    /** The current value of this cache's payload */
+    value: DataType | undefined;
     apiEndpoint: string;
 
     /** ok is false if there are no unresolved errors. */
@@ -24,6 +26,7 @@ export class ApiCache<DataType> {
     constructor(apiEndpoint: string, public httpClient: HttpClient) {
         this.apiEndpoint = apiEndpoint;
         this.payloadSubject = new ReplaySubject<DataType>(1);
+        this._setupCurrentValueSubscriber(); //set up the current value subscription (this.value exposes current value synchronously)
     }
 
    /**
@@ -48,14 +51,37 @@ export class ApiCache<DataType> {
                 this.requested = true; //we have made the request
             }
         }
+
+        //if the cache is in error state, we just want to return the payload subject so the subscriber will receive the error
+
         //expose the payload to the subscriber
         return this.payloadSubject;
     }
 
     /** Reset this cache for a new request */
     reset(): void {
-        this.ok = true;
+        //reset the payload subject
+        this.payloadSubject = new ReplaySubject<DataType>(1);
+        this._setupCurrentValueSubscriber(); //reset the current value subscriber
+
+        //reset error state
+        this.ok = true; 
         this.requested = false;
         this.errors = [];
+    }
+
+    /** 
+     * set up current value subscriber.
+     * the current value subscriber exposes the current value of the cache in a synchronous
+     * way.
+     */
+    private _setupCurrentValueSubscriber(): void {
+        let mrvSubscription = this.payloadSubject.subscribe((value: DataType) => {
+            this.value = value;
+        },
+        error => {
+            this.value = undefined; //in error state, value is undefined
+            mrvSubscription.unsubscribe(); //unsubscribe because observable has errored out
+        })
     }
 }
